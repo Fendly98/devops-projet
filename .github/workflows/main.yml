@@ -37,7 +37,7 @@ jobs:
       
       - name: npm install and run app.js
         run: |
-          npm install && node app.js
+          npm install
       - name: npm test
         run: npm test
         working-directory: node_modules/

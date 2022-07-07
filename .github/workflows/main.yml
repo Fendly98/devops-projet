@@ -34,3 +34,27 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      
+      - name: npm install and run app.js
+        run: |
+          npm install && node app.js
+      - name: npm test
+        run: npm test
+        working-directory: node_modules/
+      - name: terraform init
+        run: mkdir -p /root/.ssh && cp $SSH_PRIVATE_KEY /root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa && terraform init
+      - name: terraform validate
+        run: terraform validate && echo "$SSH_PUBLIC_KEY" && terraform plan --out plan -var="ssh_public_key=$SSH_PUBLIC_KEY" && terraform apply --auto-approve plan
+        working-directory: ./inventories/inv.ini
+      - name: cytopia/ansible:latest-tools
+        run: |
+          mkdir -p ~/.ssh && echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa && chmod -R 777 ./inventories/inv.ini && '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        working-directory: ./inventories/inv.ini
+        artifacts:
+          paths:
+            - ./inventories/inv.ini
+        cache:
+          key: terraform
+          paths:
+            - .terraform
+          

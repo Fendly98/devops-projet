@@ -51,6 +51,6 @@ jobs:
           mkdir -p ~/.ssh && echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa && chmod -R 777 ./inventories/inv.ini && '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         working-directory: ./inventories/inv.ini
       - name: ansible-playbook install.yml
-        run: '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config' && ansible-playbook install.yml --check
+        run: ansible-playbook install.yml --check
         working-directory: ./inventories/inv.ini
           

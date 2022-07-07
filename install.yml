@@ -1,0 +1,33 @@
+- hosts: webserver
+  gather_facts: false
+  become: true
+  tasks:
+  - name: "Install nodejs"
+    apt:
+      update_cache: yes
+      name: nodejs
+      state: present
+
+  - name: "Install npm"
+    apt:
+      update_cache: yes
+      name: npm
+      state: present
+
+  - name: "copier le app nodejs"
+    copy:
+        src: ./app.js
+        dest: /home/ubuntu/app.js
+  - name: "copier le package.json"
+    copy:
+        src: ./package.json
+        dest: /home/ubuntu/package.json
+  - name: "npm install"
+    command:
+      chdir: /home/ubuntu/
+      cmd: npm install
+  - name: "Start the application"
+    command:
+      chdir: /home/ubuntu/
+      cmd: node app.js
+        
